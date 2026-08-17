@@ -42,8 +42,10 @@ export default function PlanetDetailPanel({ target, lang, onBack }: PlanetDetail
         </button>
 
         <div className="text-center mb-12">
-          <div className="text-xs uppercase tracking-[0.3em] text-[#e8b978] mb-3 font-semibold">{tagline}</div>
-          <h2 className="font-serif text-4xl md:text-6xl text-white">{name}</h2>
+          <div className="text-xs uppercase tracking-[0.3em] text-[#e8b978] mb-3 font-semibold drop-shadow-[0_1px_6px_rgba(0,0,0,0.85)]">
+            {tagline}
+          </div>
+          <h2 className="font-serif text-4xl md:text-6xl text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.75)]">{name}</h2>
         </div>
 
         <div className="space-y-8">
