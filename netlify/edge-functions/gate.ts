@@ -172,7 +172,7 @@ export default async (request: Request, context: { next: () => Promise<Response>
   const secret = Deno.env.get("SITE_PIN");
   if (!secret) {
     // Fail closed: without a configured PIN, don't accidentally expose the site.
-    return new Response("Site not configured", { status: 503 });
+    return new Response("Site not configured", { status: 503, headers: { "Cache-Control": "no-store" } });
   }
 
   const cookieHeader = request.headers.get("cookie") ?? "";

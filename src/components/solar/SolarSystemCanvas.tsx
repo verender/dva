@@ -72,16 +72,17 @@ function Scene({ target, onSelect, visited, lang }: SceneProps) {
   useEffect(() => {
     const controls = controlsRef.current;
     if (!controls) return;
-    // On narrow/portrait viewports the outer orbits would otherwise clip
-    // past the screen edges — pull the camera back proportionally so every
-    // planet stays reachable on a phone. The default camera position was
-    // tuned on a widescreen desktop (~16:9); screens narrower than that but
-    // still landscape (e.g. an iPad at ~4:3) got no correction at all and
-    // ended up with clipped/cramped orbits, so the same pull-back is scaled
-    // in for any aspect below the design reference, not just aspect < 1.
+    // On narrow viewports the outer orbits would otherwise clip past the
+    // screen edges — pull the camera back proportionally so every planet
+    // stays reachable. The default camera position was tuned on a
+    // widescreen desktop (~16:9), so the pull-back is scaled to any aspect
+    // narrower than that reference, not just portrait: a single continuous,
+    // monotonically-decreasing formula (no separate portrait/landscape
+    // branches) so there's no jump in framing as a device rotates or a
+    // window is resized through aspect 1.
     const DESIGN_ASPECT = 16 / 9;
     const aspect = size.width / size.height;
-    const widen = aspect < 1 ? 1 / aspect : Math.max(1, DESIGN_ASPECT / aspect);
+    const widen = Math.max(1, DESIGN_ASPECT / aspect);
     if (target === null) {
       controls.setLookAt(0, 5.5 * widen, 12.5 * widen, 0, 0, 0, true);
     } else if (target === "sun") {
