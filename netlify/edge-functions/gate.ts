@@ -184,7 +184,7 @@ export default async (request: Request, context: { next: () => Promise<Response>
     if (lockUntil > now) {
       return new Response("Too many attempts", {
         status: 429,
-        headers: { "Retry-After": String(lockUntil - now) },
+        headers: { "Retry-After": String(lockUntil - now), "Cache-Control": "no-store" },
       });
     }
 
@@ -201,6 +201,7 @@ export default async (request: Request, context: { next: () => Promise<Response>
         "Set-Cookie",
         `${ATTEMPTS_COOKIE}=${token}; Path=/; Max-Age=${ATTEMPTS_COOKIE_MAX_AGE}; HttpOnly; Secure; SameSite=Strict`,
       );
+      headers.set("Cache-Control", "no-store");
       return new Response("Invalid PIN", { status: 401, headers });
     }
 
@@ -212,6 +213,7 @@ export default async (request: Request, context: { next: () => Promise<Response>
       `${COOKIE_NAME}=${authToken}; Path=/; Max-Age=${SESSION_TTL_SECONDS}; HttpOnly; Secure; SameSite=Strict`,
     );
     headers.append("Set-Cookie", `${ATTEMPTS_COOKIE}=; Path=/; Max-Age=0; HttpOnly; Secure; SameSite=Strict`);
+    headers.set("Cache-Control", "no-store");
     return new Response("ok", { status: 200, headers });
   }
 
@@ -224,7 +226,7 @@ export default async (request: Request, context: { next: () => Promise<Response>
   const variant = e === "locked" ? "locked" : e === "wrong" ? "wrong" : "none";
   return new Response(pinPage(variant), {
     status: 401,
-    headers: { "Content-Type": "text/html; charset=utf-8" },
+    headers: { "Content-Type": "text/html; charset=utf-8", "Cache-Control": "no-store" },
   });
 };
 
