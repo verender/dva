@@ -1,6 +1,17 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+
+@theme {
+  --font-serif: "Cormorant Garamond", serif;
+  --font-sans: "Dosis", ui-sans-serif, system-ui, sans-serif;
+
+  --color-cream: #faf3e6;
+  --color-ivory: #fffdf8;
+  --color-gold: #c9a24b;
+  --color-amber-soft: #e8b978;
+  --color-madrid: #5e3a9e;
+
+  --animate-fade-in: fadeIn 1.6s ease-in-out forwards;
+}
 
 :root {
   color-scheme: light;
@@ -72,8 +83,4 @@ a {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-.animate-fade-in {
-  animation: fadeIn 1.6s ease-in-out forwards;
 }
