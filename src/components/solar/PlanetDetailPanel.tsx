@@ -41,11 +41,13 @@ export default function PlanetDetailPanel({ target, lang, onBack }: PlanetDetail
           ← Back to the constellation
         </button>
 
-        <div className="text-center mb-12">
-          <div className="text-xs uppercase tracking-[0.3em] text-[#e8b978] mb-3 font-semibold drop-shadow-[0_1px_6px_rgba(0,0,0,0.85)]">
+        <div className="text-center mb-12 flex flex-col items-center gap-3">
+          <div className="inline-block rounded-full border border-white/10 bg-[#0a1128]/45 backdrop-blur-md px-4 py-1.5 text-xs uppercase tracking-[0.3em] text-[#e8b978] font-semibold">
             {tagline}
           </div>
-          <h2 className="font-serif text-4xl md:text-6xl text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.75)]">{name}</h2>
+          <h2 className="inline-block rounded-3xl bg-[#0a1128]/30 backdrop-blur-md px-6 py-2 font-serif text-4xl md:text-6xl text-white">
+            {name}
+          </h2>
         </div>
 
         <div className="space-y-8">

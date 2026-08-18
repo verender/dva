@@ -43,13 +43,15 @@ export default function WrappedCard({ stat, days, lang }: WrappedCardProps) {
         transition={{ duration: 0.8 }}
       >
         <div
-          className={`font-serif text-white leading-none mb-4 ${
+          className={`font-serif text-white leading-none mb-4 drop-shadow-[0_2px_12px_rgba(0,0,0,0.45)] ${
             stat.emphasis === "huge" ? "text-8xl md:text-[10rem]" : "text-7xl md:text-8xl"
           }`}
         >
           {isNumeric ? <CountUp target={Number(raw)} /> : raw}
         </div>
-        <div className="text-sm md:text-base uppercase tracking-[0.3em] text-white/80">{t(stat.label, lang)}</div>
+        <div className="text-sm md:text-base uppercase tracking-[0.3em] text-white/80 drop-shadow-[0_1px_6px_rgba(0,0,0,0.4)]">
+          {t(stat.label, lang)}
+        </div>
       </motion.div>
     </section>
   );

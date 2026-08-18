@@ -9,11 +9,39 @@ type TrailerProps = {
   onDone: () => void;
 };
 
-// Rapid flash-cut sequence of real photos on a beat, then a big kinetic
+// How many photos linger on screen together, and how long each new one
+// takes to arrive — slow enough to actually register a face/place, unlike
+// the original one-at-a-time full-bleed flash-cut.
+const MAX_ON_SCREEN = 3;
+const FRAME_HOLD_MS = 900;
+
+// Scatter offsets per on-screen slot (not per photo) so the trio always
+// reads as a loose, natural polaroid cluster regardless of which photos
+// currently occupy those slots.
+const SLOT_LAYOUT = [
+  { x: "-24%", y: "-4%", rotate: -7, scale: 0.88, z: 1 },
+  { x: "4%", y: "3%", rotate: 2, scale: 1, z: 3 },
+  { x: "26%", y: "-6%", rotate: 8, scale: 0.86, z: 2 },
+];
+
+// A trailing window of up to MAX_ON_SCREEN beat indices ending at frame k —
+// ramps up from one photo, holds at three, then drains back to zero as the
+// sequence runs out, so entry and exit both feel deliberate.
+function framePhotos(k: number): number[] {
+  const start = Math.max(0, k - MAX_ON_SCREEN + 1);
+  const end = Math.min(k, trailerBeats.length - 1);
+  const indices: number[] = [];
+  for (let i = start; i <= end; i++) indices.push(i);
+  return indices;
+}
+
+const TOTAL_FRAMES = trailerBeats.length + MAX_ON_SCREEN - 1;
+
+// Rapid-but-readable collage of real photos on a beat, then a big kinetic
 // title reveal, then auto-advances into the constellation. No three.js here —
 // keeps first paint light while the solar-system chunk streams in behind it.
 export default function Trailer({ lang, onDone }: TrailerProps) {
-  const [index, setIndex] = useState(0);
+  const [frameIndex, setFrameIndex] = useState(0);
   const [showTitle, setShowTitle] = useState(trailerBeats.length === 0);
   const doneRef = useRef(onDone);
   doneRef.current = onDone;
@@ -23,31 +51,45 @@ export default function Trailer({ lang, onDone }: TrailerProps) {
       const timeout = setTimeout(() => doneRef.current(), 3200);
       return () => clearTimeout(timeout);
     }
-    if (index >= trailerBeats.length) {
+    if (frameIndex >= TOTAL_FRAMES) {
       setShowTitle(true);
       return;
     }
-    const beat = trailerBeats[index];
-    const timeout = setTimeout(() => setIndex((i) => i + 1), beat.holdMs);
+    const timeout = setTimeout(() => setFrameIndex((i) => i + 1), FRAME_HOLD_MS);
     return () => clearTimeout(timeout);
-  }, [index, showTitle]);
+  }, [frameIndex, showTitle]);
+
+  const frame = framePhotos(frameIndex);
 
   return (
     <div className="fixed inset-0 z-[90] bg-[#0a1128] overflow-hidden">
-      <AnimatePresence mode="wait">
-        {!showTitle && trailerBeats[index] && (
-          <motion.img
-            key={index}
-            src={trailerBeats[index].photo}
-            alt={t(trailerBeats[index].photoAlt, lang)}
-            initial={{ opacity: 0, scale: 1.08 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.35, ease: "easeOut" }}
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-        )}
-      </AnimatePresence>
+      {!showTitle && (
+        <div className="absolute inset-0 flex items-center justify-center">
+          <AnimatePresence>
+            {frame.map((beatIndex, slot) => {
+              const beat = trailerBeats[beatIndex];
+              const pos = SLOT_LAYOUT[slot % SLOT_LAYOUT.length];
+              return (
+                <motion.div
+                  key={beatIndex}
+                  initial={{ opacity: 0, scale: pos.scale * 0.9, x: pos.x, y: pos.y, rotate: pos.rotate }}
+                  animate={{ opacity: 1, scale: pos.scale, x: pos.x, y: pos.y, rotate: pos.rotate }}
+                  exit={{ opacity: 0, scale: pos.scale * 0.9 }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
+                  className="absolute w-[46vw] max-w-sm aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl border border-white/10"
+                  style={{ zIndex: pos.z }}
+                >
+                  <img
+                    src={beat.photo}
+                    alt={t(beat.photoAlt, lang)}
+                    className="w-full h-full object-cover"
+                  />
+                </motion.div>
+              );
+            })}
+          </AnimatePresence>
+        </div>
+      )}
 
       <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/10 to-black/60 pointer-events-none" />
 
@@ -74,7 +116,7 @@ export default function Trailer({ lang, onDone }: TrailerProps) {
 
       {!showTitle && (
         <button
-          onClick={() => setIndex(trailerBeats.length)}
+          onClick={() => setFrameIndex(TOTAL_FRAMES)}
           className="absolute bottom-8 right-8 text-[10px] uppercase tracking-[0.3em] text-white/60 hover:text-white transition z-10"
         >
           Skip
