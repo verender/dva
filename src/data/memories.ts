@@ -55,7 +55,6 @@ export const memories: MemoryEntry[] = [
     photo: "/photos/memories/04.jpg",
     photoAlt: loc("Placeholder photo"),
     tag: "trip",
-    planet: "wanderlust",
   },
   {
     id: "winter",
@@ -83,7 +82,6 @@ export const memories: MemoryEntry[] = [
     photo: "/photos/memories/07.png",
     photoAlt: loc("Placeholder photo"),
     tag: "trip",
-    planet: "wanderlust",
   },
   {
     id: "everyday-two",
@@ -138,7 +136,6 @@ export const memories: MemoryEntry[] = [
     photo: "/photos/memories/13.jpg",
     photoAlt: loc("Placeholder photo"),
     tag: "trip",
-    planet: "sea-sun",
   },
   {
     id: "recent",
