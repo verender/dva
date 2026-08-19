@@ -53,6 +53,13 @@ export default function PlanetDetailPanel({ target, lang, onBack }: PlanetDetail
         <div className="space-y-8">
           {chapters.map((chapter) => (
             <GlassCard key={chapter.id} variant={isTeam ? "team" : "default"}>
+              {chapter.image && (
+                <img
+                  src={chapter.image}
+                  alt={t(chapter.title, lang)}
+                  className="w-full h-56 md:h-72 object-cover rounded-2xl shadow-lg mb-6"
+                />
+              )}
               <div className="flex items-center gap-3 mb-5">
                 <span
                   className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full font-serif text-xs font-semibold ${
