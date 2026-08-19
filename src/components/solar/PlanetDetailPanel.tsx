@@ -1,6 +1,7 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import GlassCard from "../GlassCard";
-import { compliments } from "../../data/compliments";
+import { compliments, type ComplimentChapter } from "../../data/compliments";
 import { memories } from "../../data/memories";
 import { planetsById } from "../../data/planets";
 import { t, type Lang } from "../../data/types";
@@ -13,6 +14,70 @@ type PlanetDetailPanelProps = {
 };
 
 const dateFormatter = new Intl.DateTimeFormat("en-US", { month: "long", day: "numeric", year: "numeric" });
+
+type ChapterCardProps = {
+  chapter: ComplimentChapter;
+  lang: Lang;
+  isTeam: boolean;
+};
+
+// Portrait photos get pinned to the side (like the memory cards) instead of
+// being cropped into a wide banner — orientation isn't known ahead of time
+// from the data, so it's detected once the image actually loads.
+function ChapterCard({ chapter, lang, isTeam }: ChapterCardProps) {
+  const [isPortrait, setIsPortrait] = useState(false);
+
+  const image = chapter.image && (
+    <img
+      src={chapter.image}
+      alt={t(chapter.title, lang)}
+      onLoad={(e) => {
+        const img = e.currentTarget;
+        setIsPortrait(img.naturalHeight > img.naturalWidth);
+      }}
+      className={
+        isPortrait
+          ? "w-full md:w-56 h-64 md:h-72 object-cover rounded-2xl shadow-lg shrink-0"
+          : "w-full h-56 md:h-72 object-cover rounded-2xl shadow-lg mb-6"
+      }
+    />
+  );
+
+  return (
+    <GlassCard
+      variant={isTeam ? "team" : "default"}
+      className={isPortrait ? "flex flex-col md:flex-row gap-6 md:gap-8 items-start" : undefined}
+    >
+      {image}
+      <div className={isPortrait ? "flex-1" : ""}>
+        <div className="flex items-center gap-3 mb-5">
+          <span
+            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full font-serif text-xs font-semibold ${
+              isTeam ? "bg-[#c9a24b]/20 text-[#f3d68a]" : "bg-[#c9a24b]/15 text-[#a97a2e]"
+            }`}
+          >
+            {t(chapter.kicker, lang)}
+          </span>
+          <span className={`h-px flex-1 ${isTeam ? "bg-[#c9a24b]/30" : "bg-[#c9a24b]/20"}`} />
+        </div>
+        <h3 className={`font-serif text-2xl md:text-3xl mb-5 ${isTeam ? "text-white" : "text-[#3a2a14]"}`}>
+          {t(chapter.title, lang)}
+        </h3>
+        <div
+          className={`space-y-4 text-base md:text-lg font-light leading-relaxed ${
+            isTeam ? "text-white/85" : "text-[#4a3823]"
+          }`}
+        >
+          {chapter.paragraphs.map((p, i) => (
+            <p key={i} className={i === 0 ? "drop-cap" : ""}>
+              {t(p, lang)}
+            </p>
+          ))}
+        </div>
+      </div>
+    </GlassCard>
+  );
+}
 
 // Shared identically between the 3D constellation and the non-WebGL
 // fallback picker — only the "pick a planet" affordance differs upstream.
@@ -52,39 +117,7 @@ export default function PlanetDetailPanel({ target, lang, onBack }: PlanetDetail
 
         <div className="space-y-8">
           {chapters.map((chapter) => (
-            <GlassCard key={chapter.id} variant={isTeam ? "team" : "default"}>
-              {chapter.image && (
-                <img
-                  src={chapter.image}
-                  alt={t(chapter.title, lang)}
-                  className="w-full h-56 md:h-72 object-cover rounded-2xl shadow-lg mb-6"
-                />
-              )}
-              <div className="flex items-center gap-3 mb-5">
-                <span
-                  className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full font-serif text-xs font-semibold ${
-                    isTeam ? "bg-[#c9a24b]/20 text-[#f3d68a]" : "bg-[#c9a24b]/15 text-[#a97a2e]"
-                  }`}
-                >
-                  {t(chapter.kicker, lang)}
-                </span>
-                <span className={`h-px flex-1 ${isTeam ? "bg-[#c9a24b]/30" : "bg-[#c9a24b]/20"}`} />
-              </div>
-              <h3 className={`font-serif text-2xl md:text-3xl mb-5 ${isTeam ? "text-white" : "text-[#3a2a14]"}`}>
-                {t(chapter.title, lang)}
-              </h3>
-              <div
-                className={`space-y-4 text-base md:text-lg font-light leading-relaxed ${
-                  isTeam ? "text-white/85" : "text-[#4a3823]"
-                }`}
-              >
-                {chapter.paragraphs.map((p, i) => (
-                  <p key={i} className={i === 0 ? "drop-cap" : ""}>
-                    {t(p, lang)}
-                  </p>
-                ))}
-              </div>
-            </GlassCard>
+            <ChapterCard key={chapter.id} chapter={chapter} lang={lang} isTeam={isTeam} />
           ))}
 
           {relatedMemories.map((memory) => (
