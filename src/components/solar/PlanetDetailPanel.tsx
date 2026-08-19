@@ -37,7 +37,7 @@ function ChapterCard({ chapter, lang, isTeam }: ChapterCardProps) {
       }}
       className={
         isPortrait
-          ? "w-full md:w-56 h-64 md:h-72 object-cover rounded-2xl shadow-lg shrink-0"
+          ? "w-full md:w-56 h-96 md:h-72 object-cover object-top rounded-2xl shadow-lg shrink-0"
           : "w-full h-56 md:h-72 object-cover rounded-2xl shadow-lg mb-6"
       }
     />
