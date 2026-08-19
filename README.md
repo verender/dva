@@ -34,25 +34,14 @@ get indexed by search engines.
 
 ## Media
 
-- **Photos** (`public/photos/`) are small enough to live directly in the repo.
-- **Video and audio** (`public/video/`, `public/audio/`) are tracked through
-  [Netlify Large Media](https://docs.netlify.com/large-media/overview/) (Git
-  LFS under the hood) via `.gitattributes`, so the git repo itself stays
-  small even as real footage gets swapped in. One-time setup, from this
-  folder, after the site is linked to Netlify:
-
-  ```bash
-  brew install git-lfs        # or your OS's package manager
-  npm install -g netlify-cli
-  netlify login
-  netlify link                # link this folder to the Netlify site
-  netlify large-media:setup   # installs LFS hooks + points .lfsconfig at Netlify
-  git lfs install
-  ```
-
-  After that, any file matching a pattern in `.gitattributes` (`*.mp4`,
-  `*.mov`, `*.mp3`, etc.) is automatically stored via Netlify Large Media on
-  `git add`/`git commit`/`git push` — no different workflow day to day.
+- **Photos, video, and audio** (`public/photos/`, `public/video/`,
+  `public/audio/`) are all committed directly into the repo as regular
+  files. [Netlify Large Media](https://docs.netlify.com/large-media/overview/)
+  (the Git-LFS-backed option originally planned here) was deprecated by
+  Netlify in 2023 and its CLI setup command no longer exists, so it's not an
+  option for this project. Fine in practice since nothing here approaches
+  GitHub's 100MB single-file limit — if a future video/audio file gets close
+  to that, compress it before committing rather than reaching for LFS.
 
 ## Build
 
