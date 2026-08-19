@@ -46,7 +46,7 @@ export default function App() {
 
   return (
     <div className="min-h-screen text-[#3a2a14] font-sans bg-[#0a1128]">
-      <AmbientAudio src="/audio/ambient.mp3" isMuted={muted} pauseSignal={pauseMusic} hasStarted={hasStarted} />
+      <AmbientAudio src="/audio/audio.m4a" isMuted={muted} pauseSignal={pauseMusic} hasStarted={hasStarted} />
 
       <GestureGate
         visible={phase.kind === "gate"}

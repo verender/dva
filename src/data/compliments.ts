@@ -37,7 +37,7 @@ export const compliments: ComplimentChapter[] = [
       loc("Placeholder paragraph about your beauty."),
       loc("A second placeholder paragraph, replace with real verses."),
     ],
-    image: "/photos/compliments/placeholder-beauty.jpg",
+    image: "/photos/compliments/beauty.png",
     planet: "sun",
   },
   {
@@ -52,7 +52,7 @@ export const compliments: ComplimentChapter[] = [
           "not the whole site's theme, just one true thing about you."
       ),
     ],
-    image: "/photos/compliments/placeholder-football.jpg",
+    image: "/photos/compliments/football.png",
     planet: "her-team",
   },
   {
@@ -75,7 +75,7 @@ export const compliments: ComplimentChapter[] = [
     paragraphs: [
       loc("Placeholder — a paragraph about how you light up near the water, replace with a real memory of you at the beach."),
     ],
-    image: "/photos/compliments/placeholder-sea.jpg",
+    image: "/photos/compliments/sea.jpg",
     planet: "sea-sun",
   },
   {
